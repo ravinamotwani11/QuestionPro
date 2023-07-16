@@ -1,0 +1,50 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.1.1'
+	id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.questionpro'
+version = '0.0.1-SNAPSHOT'
+
+ext {
+    mapstructVersion = "1.5.5.Final"
+}
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    testImplementation "org.testng:testng:6.10", "org.easytesting:fest-assert:1.4"
+    annotationProcessor "org.mapstruct:mapstruct-processor:1.5.5.Final"
+    
+	// JUnit 4
+    testImplementation 'junit:junit:4.13.2'
+
+    // Mockito Core - Required for mocking objects in tests
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+
+    // Spring Test - Provides additional testing support for Spring applications
+    testImplementation 'org.springframework:spring-test:5.3.9'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs = [
+            '-Amapstruct.suppressGeneratorTimestamp=true'
+    ]
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
