@@ -25,8 +25,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.client.RestTemplate;
 
 import com.questionpro.hackernewspi.Model.HackerNewsComment;
+import com.questionpro.hackernewspi.Model.HackerNewsStory;
 import com.questionpro.hackernewspi.Model.Story;
 import com.questionpro.hackernewspi.mapper.HackerNewsCommentMapper;
+import com.questionpro.hackernewspi.mapper.HackerNewsStoryMapper;
 import com.questionpro.hackernewspi.service.HackerNewsApiServiceImplentation;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -38,18 +40,21 @@ public class HackerNewsApiServiceTest {
 	@Mock
 	private HackerNewsCommentMapper hackerNewsCommentMapper;
 
+	@Mock
+	private HackerNewsStoryMapper hackerNewsStoryMapper;
+
 	@InjectMocks
 	private HackerNewsApiServiceImplentation hackerNewsApiService;
 
 	@Before
 	public void setUp() {
-		hackerNewsApiService = new HackerNewsApiServiceImplentation(hackerNewsCommentMapper);
+		hackerNewsApiService = new HackerNewsApiServiceImplentation(hackerNewsCommentMapper, hackerNewsStoryMapper);
 	}
 
 	@Test
 	public void testGetTopStories_CacheExpired_ReturnsTopStoriesFromAPI() {
 		// Act
-		List<Story> topStories = hackerNewsApiService.getTopStories();
+		List<HackerNewsStory> topStories = hackerNewsApiService.getTopStories();
 
 		// Assert
 		assertEquals(10, topStories.size());
@@ -71,7 +76,7 @@ public class HackerNewsApiServiceTest {
 		pastStories.add(story2);
 
 		// Act
-		Set<Story> result = hackerNewsApiService.getPastStories();
+		Set<HackerNewsStory> result = hackerNewsApiService.getPastStories();
 
 		// Modify the result set to check if the original set remains unchanged
 		Story story3 = new Story();
@@ -91,7 +96,7 @@ public class HackerNewsApiServiceTest {
 		// Arrange
 
 		// Act
-		Set<Story> result = hackerNewsApiService.getPastStories();
+		Set<HackerNewsStory> result = hackerNewsApiService.getPastStories();
 
 		// Assert
 		assertEquals(0, result.size());

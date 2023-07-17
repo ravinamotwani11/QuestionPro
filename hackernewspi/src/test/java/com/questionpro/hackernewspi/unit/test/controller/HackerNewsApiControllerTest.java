@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.questionpro.hackernewspi.Model.HackerNewsComment;
+import com.questionpro.hackernewspi.Model.HackerNewsStory;
 import com.questionpro.hackernewspi.Model.Story;
 import com.questionpro.hackernewspi.controller.HackerNewsApiController;
 import com.questionpro.hackernewspi.service.HackerNewsApiService;
@@ -43,21 +44,21 @@ public class HackerNewsApiControllerTest {
 
 	@Test
 	public void testGetTopStories() {
-		List<Story> mockTopStories = new ArrayList<>();
+		List<HackerNewsStory> mockTopStories = new ArrayList<>();
 		// Add mock Story objects to the list.
 		when(hackerNewsApiService.getTopStories()).thenReturn(mockTopStories);
 
-		List<Story> topStories = hackerNewsApiController.getTopStories();
+		List<HackerNewsStory> topStories = hackerNewsApiController.getTopStories();
 		assertEquals(mockTopStories, topStories);
 	}
 
 	@Test
 	public void testGetPastStories() {
-		Set<Story> mockPastStories = new HashSet<>();
+		Set<HackerNewsStory> mockPastStories = new HashSet<>();
 		// Add mock Story objects to the set.
 		when(hackerNewsApiService.getPastStories()).thenReturn(mockPastStories);
 
-		Set<Story> pastStories = hackerNewsApiController.getPastStories();
+		Set<HackerNewsStory> pastStories = hackerNewsApiController.getPastStories();
 		assertEquals(mockPastStories, pastStories);
 	}
 

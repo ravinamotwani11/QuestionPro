@@ -24,8 +24,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.questionpro.hackernewspi.Model.Comment;
 import com.questionpro.hackernewspi.Model.HackerNewsComment;
+import com.questionpro.hackernewspi.Model.HackerNewsStory;
 import com.questionpro.hackernewspi.Model.Story;
 import com.questionpro.hackernewspi.mapper.HackerNewsCommentMapper;
+import com.questionpro.hackernewspi.mapper.HackerNewsStoryMapper;
 
 @Service
 public class HackerNewsApiServiceImplentation implements HackerNewsApiService {
@@ -37,13 +39,15 @@ public class HackerNewsApiServiceImplentation implements HackerNewsApiService {
 	private RestTemplate restTemplate;
 	private final Map<Long, Story> topStoriesCache = new ConcurrentHashMap<>();
 	private LocalDateTime cacheExpiryTime;
-	private Set<Story> pastStories;
+	private Set<HackerNewsStory> pastStories;
 
 	private HackerNewsCommentMapper hackerNewsCommentMapper;
+	private HackerNewsStoryMapper hackerNewsStoryMapper;
 
-	public HackerNewsApiServiceImplentation(HackerNewsCommentMapper hackerNewsCommentMapper) {
+	public HackerNewsApiServiceImplentation(HackerNewsCommentMapper hackerNewsCommentMapper, HackerNewsStoryMapper hackerNewsStoryMapper) {
 		restTemplate = new RestTemplate();
 		this.hackerNewsCommentMapper = hackerNewsCommentMapper;
+		this.hackerNewsStoryMapper = hackerNewsStoryMapper;
 		pastStories = new HashSet<>();
 	}
 
@@ -51,9 +55,9 @@ public class HackerNewsApiServiceImplentation implements HackerNewsApiService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Story> getTopStories() {
+	public List<HackerNewsStory> getTopStories() {
 		if (cacheExpiryTime != null && LocalDateTime.now().isBefore(cacheExpiryTime)) {
-			return new ArrayList<>(topStoriesCache.values());
+			return hackerNewsStoryMapper.map(new ArrayList<>(topStoriesCache.values()));
 		}
 
 		ResponseEntity<Long[]> response = restTemplate.getForEntity(TOP_STORIES_URL, Long[].class);
@@ -67,12 +71,15 @@ public class HackerNewsApiServiceImplentation implements HackerNewsApiService {
 
 		List<Story> sortedTopStories = topStories.stream().sorted(Comparator.comparingInt(Story::getScore).reversed())
 				.collect(Collectors.toList());
-		pastStories.addAll(sortedTopStories);
+
+		List<HackerNewsStory> hackerNewsSortedTopStories = hackerNewsStoryMapper.map(sortedTopStories);
+
+		pastStories.addAll(hackerNewsSortedTopStories);
 		cacheExpiryTime = LocalDateTime.now().plusMinutes(15);
 		topStoriesCache.clear();
 		topStories.forEach(story -> topStoriesCache.put(story.getId(), story));
 
-		return sortedTopStories;
+		return hackerNewsSortedTopStories;
 	}
 
 	/**
@@ -89,7 +96,7 @@ public class HackerNewsApiServiceImplentation implements HackerNewsApiService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set<Story> getPastStories() {
+	public Set<HackerNewsStory> getPastStories() {
 		return pastStories;
 	}
 

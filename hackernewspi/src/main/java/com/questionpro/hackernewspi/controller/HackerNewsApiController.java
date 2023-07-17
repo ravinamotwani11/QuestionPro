@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import com.questionpro.hackernewspi.Model.HackerNewsComment;
-import com.questionpro.hackernewspi.Model.Story;
+import com.questionpro.hackernewspi.Model.HackerNewsStory;
 import com.questionpro.hackernewspi.service.HackerNewsApiService;
 
 @RestController
@@ -30,10 +30,10 @@ public class HackerNewsApiController {
 	/**
 	 * This endpoint is used to get top 10 stories
 	 * 
-	 * @return List of {@link Story}
+	 * @return List of {@link HackerNewsStory}
 	 */
 	@GetMapping("/top-stories")
-	public List<Story> getTopStories() {
+	public List<HackerNewsStory> getTopStories() {
 		return hackerNewsApiService.getTopStories();
 	}
 
@@ -41,10 +41,10 @@ public class HackerNewsApiController {
 	 * This endpoint is used to get all the stories that were served previously from
 	 * the /top-stories endpoint
 	 * 
-	 * @return List of {@link Story}
+	 * @return List of {@link HackerNewsStory}
 	 */
 	@GetMapping("/past-stories")
-	public Set<Story> getPastStories() {
+	public Set<HackerNewsStory> getPastStories() {
 		return hackerNewsApiService.getPastStories();
 	}
 

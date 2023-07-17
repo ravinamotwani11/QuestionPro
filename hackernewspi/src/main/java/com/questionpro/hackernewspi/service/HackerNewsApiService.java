@@ -13,7 +13,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import com.questionpro.hackernewspi.Model.HackerNewsComment;
-import com.questionpro.hackernewspi.Model.Story;
+import com.questionpro.hackernewspi.Model.HackerNewsStory;
 
 @Service
 public interface HackerNewsApiService {
@@ -21,16 +21,16 @@ public interface HackerNewsApiService {
 	/**
 	 * This method is used to get the list of top stories
 	 * 
-	 * @return List of {@link Story}
+	 * @return List of {@link HackerNewsStory}
 	 */
-	public List<Story> getTopStories();
+	public List<HackerNewsStory> getTopStories();
 
 	/**
 	 * This method is used to get past stories
 	 * 
-	 * @return Set of {@link Story}
+	 * @return Set of {@link HackerNewsStory}
 	 */
-	public Set<Story> getPastStories();
+	public Set<HackerNewsStory> getPastStories();
 
 	/**
 	 * This method is used to get top comments by child count
